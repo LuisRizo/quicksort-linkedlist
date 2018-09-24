@@ -25,14 +25,14 @@ void printListnode(struct listnode * list);
 int main(void)
 {  
 	// char buffer[65536];
-   long i, max_reps = 500;
+   long i, max_reps = 500, count = 0;
    double time_spent;
    clock_t begin, end;
    struct listnode *node, *space;
 	// setvbuf(stdout, buffer, _IOFBF, sizeof(buffer));
 
    space =  (struct listnode *) malloc(max_reps * sizeof(struct listnode));
-   while(1) {
+   while(count < 1) {
 		begin = clock();
 		printf("Begin: %lu", begin);
    		srand(2012);
@@ -56,8 +56,8 @@ int main(void)
 		}
 		end = clock();
 		time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-		printf("Sort successful in %f seconds\n", time_spent);
-		exit(0);
+		printf("Sort #%ld successful in %f seconds\n", count, time_spent);
+		count++;
    }
    exit(0);
 }
