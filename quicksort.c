@@ -133,7 +133,7 @@ struct listnode * sort(struct listnode * node){
 
 	int i, j1, j2;
 	long length;
-	struct listnode * pivot;
+	struct listnode * pivot, * tmp;
 
 	length = getLengthOfListnode(node);
 	if (length > 1){
@@ -143,14 +143,22 @@ struct listnode * sort(struct listnode * node){
 		swapNodes(&node, i, length - 1);
 
 		j1 = 0; j2 = length - 1;
+		tmp = node;
 		while(j1 < j2) {
 			debugCrash(7);
-			for(; getNode(node, j1)->key < pivot->key; j1++);
+			while(tmp->key < pivot-> key) {
+				j1++;
+				if (tmp->next->key > pivot->key) {
+					break;
+				}
+				tmp = tmp->next;
+			}
 			debugCrash(8);
 			for(; getNode(node, j2)->key >= pivot->key && j2 > j1; j2--);
 			
 			if (j1 != j2) {
 				swapNodes(&node, j1, j2);
+				tmp = tmp->next;
 			}
 		}
 		swapNodes(&node, length - 1, j1);
