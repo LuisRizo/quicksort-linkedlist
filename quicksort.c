@@ -40,7 +40,6 @@ int main(void)
 		}
 		(space+elements - 1)->next = NULL;
 		node = space;
-		exit(0);
 		printf("\n prepared list, now starting sort\n");
 		node = sort(node);
 		printf("\n checking sorted list\n");
