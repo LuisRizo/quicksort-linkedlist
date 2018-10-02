@@ -10,15 +10,10 @@ Student: Luis Rizo.
 #define randomindex(k) (rand() % k);
 
 struct listnode { struct listnode * next; long key; };
-void printAddress(struct listnode * p) { printf("%p\n", p); }
 
 struct listnode * getNode(struct listnode * a, int idx);
 struct listnode * sort(struct listnode * a);
-
 long getLengthOfListnode(struct listnode * a);
-
-void swapNodes(struct listnode ** list, int i1, int i2);
-void printListnode(struct listnode * list);
 
 int main(void)
 {  
@@ -60,14 +55,6 @@ int main(void)
    exit(0);
 }
 
-void printListnode(struct listnode * list) {
-	int i = 0, length = getLengthOfListnode(list);
-	for(i = 0; i < length; i++) {
-		printf("%ld,", getNode(list, i)->key);
-	}
-	printf("\n");
-}
-
 struct listnode * getNode(struct listnode * a, int idx) {
 	int i = 0;
 	struct listnode * tmp = a;
@@ -91,30 +78,6 @@ long getLengthOfListnode(struct listnode * a) {
 	return length;
 }
 
-void swapNodes(struct listnode ** list, int i1, int i2) {
-	struct listnode * node, * val, * prevNode, * prevVal, * tmp;
-	if (i1 == i2) return;
-	prevNode = getNode(*list, i1 - 1);
-	prevVal = getNode(*list, i2 - 1);
-	node = prevNode->next;
-	val = prevVal->next;
-	if (!node || !val) return;
-
-	if (prevNode)
-		prevNode->next = val;
-	else
-		*list = val;
-
-	if (prevVal)
-		prevVal->next = node;
-	else
-		*list = node;
-
-	tmp = val->next;
-	val->next = node->next;
-	node->next = tmp;
-}
-
 struct listnode * sort(struct listnode * node){
 	int i = 0;
 	long length;
@@ -135,7 +98,7 @@ struct listnode * sort(struct listnode * node){
 			if (tmpNode->key < pivot->key) {
 				if (!smaller) smaller = lastSmaller = tmpNode;
 				else lastSmaller = lastSmaller->next = tmpNode;
-			} else if (tmpNode != pivot) {
+			} else if (tmpNode != pivot) { // Check for address equality
 				if (!larger) larger = lastLarger = tmpNode;
 				else lastLarger = lastLarger->next = tmpNode;
 			}
