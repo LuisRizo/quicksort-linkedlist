@@ -88,7 +88,6 @@ long getLengthOfListnode(struct listnode * a) {
 		temp = temp->next;
 		length++;
 	}
-	
 	return length;
 }
 
@@ -117,43 +116,46 @@ void swapNodes(struct listnode ** list, int i1, int i2) {
 }
 
 struct listnode * sort(struct listnode * node){
-	int i = 0, j1, j2;
+	int i = 0;
 	long length;
-	struct listnode * pivot, * tmp;
+	struct listnode * pivot, * tmpNode, * smaller = NULL, * lastSmaller = NULL, * larger = NULL, * lastLarger = NULL;
 
 	length = getLengthOfListnode(node);
 	if (length > 1){
 		i = randomindex(length);
 		pivot = getNode(node, i);
-		swapNodes(&node, i, length - 1);
 
-		j1 = 0; j2 = length - 1;
-		tmp = node;
-		while(tmp && j1 < j2) {
-			while(tmp->key < pivot->key) {
-				j1++;
-				if (tmp->next->key >= pivot->key) {
-					break;
-				}
-				tmp = tmp->next;
+		tmpNode = node;
+		/* Make a single run through the node list */
+		while(tmpNode) {
+			/* Add node->key < pivot->key into `smaller`,
+			 * If larger, add into `larger`.
+			 * Ensure pivot is not added to either.
+			 */
+			if (tmpNode->key < pivot->key) {
+				if (!smaller) smaller = lastSmaller = tmpNode;
+				else lastSmaller = lastSmaller->next = tmpNode;
+			} else if (tmpNode != pivot) {
+				if (!larger) larger = lastLarger = tmpNode;
+				else lastLarger = lastLarger->next = tmpNode;
 			}
-			for(; getNode(node, j2)->key >= pivot->key && j2 > j1; j2--);
-			
-			if (j1 != j2) {
-				swapNodes(&node, j1, j2);
-				tmp = getNode(node, j1); // Update pointer after swap.
-			}
+			tmpNode = tmpNode->next;
 		}
-		swapNodes(&node, length - 1, j1);
-		if (j1 == 0) {
-			pivot = node->next;
-			j1++;
-		}
-		getNode(node, j1 - 1)->next = NULL;
-		node = sort(node);
-		pivot = sort(pivot);
-		getNode(node, j1 - 1)->next = pivot;
+		/* Add pivot at the end of smaller */
+		if (lastSmaller) lastSmaller = lastSmaller->next = pivot;
+		else smaller = lastSmaller = pivot;
+		/* Make last elements on smaller and larger point to NULL */
+		lastSmaller->next = NULL;
+		if (lastLarger) lastLarger->next = NULL;
+		/* Sort smaller and larger separately */
+		smaller = sort(smaller);
+		larger = sort(larger);
+		/* Join smaller and larger back together */
+		lastSmaller = smaller;
+		/* Find last smallest */
+		while(lastSmaller->next != NULL) {lastSmaller = lastSmaller->next;}
+		lastSmaller->next = larger;
+		node = smaller;
 	}
 	return node;
 }
-
