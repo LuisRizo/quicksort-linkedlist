@@ -24,11 +24,11 @@ int main(void)
    struct listnode *node, *space;
 
    space =  (struct listnode *) malloc(MAX_ELEMENTS * sizeof(struct listnode));
+   srand(time(NULL));
    while(count < 100) {
 	    elements = MAX_ELEMENTS;
 		begin = clock();
 		printf("Begin: %lu | Elements: %ld", begin, elements);
-   		srand(begin);
 		for( i=0; i < elements; i++ )
 		{  (space + i)->key = 2*((17*i)%elements);
 			(space + i)->next = (space + (i+1));
